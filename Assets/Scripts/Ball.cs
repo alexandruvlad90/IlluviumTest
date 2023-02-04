@@ -105,7 +105,7 @@ public class Ball : MonoBehaviour
             }
         }
 
-        if (tilesBetween == 1) //if there is only one tile between the balls start fighting
+        if (tilesBetween <= 1) //if there is only one tile between the balls start fighting
         {
             SwitchState(fightState);
         }
