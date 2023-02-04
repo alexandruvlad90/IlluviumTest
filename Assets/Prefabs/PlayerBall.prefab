@@ -25,14 +25,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1329087364614644287}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.71, y: 0.095, z: 0}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: 0, y: 0.095, z: 0.668}
   m_LocalScale: {x: 0.0948089, y: 0.19502191, z: 0.0948089}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5945507635529268407}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
 --- !u!33 &4010287194105326373
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -446,6 +446,12 @@ MonoBehaviour:
   ballMesh: {fileID: 5945507635378406153}
   muzzle: {fileID: 7193325977658832136}
   ballBody: {fileID: 5945507635378406155}
+  lerpDuration: 0.5
+  rollSpeed: 50
   enemyBall: {fileID: 0}
   cameraHolder: {fileID: 3672281751454408813}
   tilesPerSimulationCicle: 10
+  currentState: {fileID: 0}
+  calculatePathState: {fileID: 0}
+  moveState: {fileID: 0}
+  fightState: {fileID: 0}

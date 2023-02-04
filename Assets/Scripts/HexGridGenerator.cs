@@ -4,17 +4,28 @@ using UnityEngine;
 
 public class HexGridGenerator : MonoBehaviour
 {
+	HexTile[] cells;
+	private SimulationManager simManager; //reference to the SimulationManager
+
+
+	public static HexGridGenerator instance;
 	public HexTile tilePrefab;//reference to the tile prefab
 	//size of the grid
 	public int height = 100;
 	public int width = 100;
 
-	HexTile[] cells;
-	private SimulationManager simManager; //reference to the SimulationManager
+	
+	private void Awake()
+	{
+		if (instance == null)
+		{
+			instance = this;
+		}
+	}
 
 	private void Start()
 	{
-		simManager = FindObjectOfType<SimulationManager>(); //could also have made it a singleton and reference its instance
+		simManager = SimulationManager.instance;
 		cells = new HexTile[height * width];
 		int i = 0;
 		for (int x = 0; x < height; x++)

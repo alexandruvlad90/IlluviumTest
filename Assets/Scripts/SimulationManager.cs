@@ -12,6 +12,16 @@ public class SimulationManager : MonoBehaviour
     [SerializeField]
     private Transform zoomOutPosition;
 
+    public static SimulationManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
+
 
     public void StartSimulation(HexTile[] cells, int height, int width)
     {
@@ -44,9 +54,36 @@ public class SimulationManager : MonoBehaviour
 
         playerOne = Instantiate(ballPrefab, playerOneTile.transform.position + new Vector3(0, 0.5f, 0), Quaternion.identity);
         playerTwo = Instantiate(ballPrefab, playerTwoTile.transform.position + new Vector3(0, 0.5f, 0), Quaternion.identity);
-        mainCamera.transform.SetParent(playerOne.cameraHolder);
-        mainCamera.transform.localPosition = Vector3.zero;
+        SwitchPlayerZoom(true);
         playerOne.SetupBall(playerOneTile.transform, playerTwo, true);
         playerTwo.SetupBall(playerTwoTile.transform, playerOne);
+    }
+
+    public void SwitchPlayerZoom(bool playerOneZoom)
+    {
+        if (playerOneZoom)
+        {
+            mainCamera.transform.SetParent(playerOne.cameraHolder);
+            
+        }
+        else
+        {
+            mainCamera.transform.SetParent(playerTwo.cameraHolder);
+        }
+        mainCamera.transform.localPosition = Vector3.zero;
+    }
+
+    public void ZoomOut()
+    {
+        mainCamera.transform.SetParent(zoomOutPosition);
+        mainCamera.transform.localPosition = Vector3.zero;
+    }
+
+    /// <summary>
+    /// unparent camera
+    /// </summary>
+    public void FreeCamera()
+    {
+        mainCamera.transform.SetParent(null);
     }
 }
