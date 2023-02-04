@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject fightDisclaimer;
     [SerializeField]
-    private GameObject RestartButton;
+    private GameObject restartButton;
 
     public static UIManager instance;
 
@@ -38,11 +38,11 @@ public class UIManager : MonoBehaviour
     public void SwitchPlayerZoom()
     {
         playerOneZoom = !playerOneZoom;
-        simManager.SwitchPlayerZoom(!playerOneZoom);
-        string playerNumber = "1";
+        simManager.SwitchPlayerZoom(playerOneZoom);
+        string playerNumber = "2";
         if (!playerOneZoom)
         {
-            playerNumber = "2";
+            playerNumber = "1";
         }
         playerZoomButtonText.text = "Switch to Player " + playerNumber;
     }
@@ -60,6 +60,12 @@ public class UIManager : MonoBehaviour
         simManager.FreeCamera();
     }
 
+    public void EndBattle()
+    {
+        fightDisclaimer.SetActive(true);
+        restartButton.SetActive(true);
+    }
+
     public void Restart()
     {
         fightIcon.SetActive(false);
@@ -67,5 +73,8 @@ public class UIManager : MonoBehaviour
         hexGridGen.StartSimulation();
         playerOneZoom = true;
         playerZoomButtonText.text = "Switch to Player 2";
+        fightDisclaimer.SetActive(false);
+        restartButton.SetActive(false);
+        
     }
 }

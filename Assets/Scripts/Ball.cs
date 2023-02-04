@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+
+    #region GeneralInfo
+
     [SerializeField]
     private MeshRenderer ballMesh;
     private Transform currentTile; //the tile the ball is currently on
@@ -16,16 +19,31 @@ public class Ball : MonoBehaviour
     [SerializeField]
     private float lerpDuration = 0.5f; //time it takes to move between two tiles
     [SerializeField]
-    private float rollSpeed = 100f; //rolling speed during visualization phase
+    private float rollSpeed = 80f; //rolling speed during visualization phase
     private Vector3 startPos;
     private Vector3 endPos;
     private int ballLayer = 0;
     private bool playerOne = false;
-    private bool isMoving = false;
+    [SerializeField]
+    private GameObject hitEffect; //effect visible when taking damage
+
 
     public Ball enemyBall; //reference to the other ball
     public Transform cameraHolder;
     public int tilesPerSimulationCicle = 10; // how many tiles does the ball calculate its path for per simulation step
+
+    #endregion
+
+    #region Combat
+
+    [SerializeField]
+    private List<GameObject> pooledBullets;
+    [SerializeField]
+    private GameObject bulletPrefab;
+    private float firingSpeed;// a randomized value indicating how often the projectiles are spawned.
+    public int hp; Ball health;
+
+    #endregion
 
 
     #region StateMachine
@@ -40,9 +58,12 @@ public class Ball : MonoBehaviour
 
     public void SetupBall(Transform spawnTile, Ball enemyBall, bool isPlayerOne = false)
     {
+        
         ballLayer = LayerMask.NameToLayer("Ball");
         playerOne = isPlayerOne;
         currentTile = spawnTile;
+        firingSpeed = Random.Range(0.4f, 1f);
+        hp = Random.Range(2, 10);
         this.enemyBall = enemyBall;
         if (isPlayerOne)
         {
@@ -69,7 +90,6 @@ public class Ball : MonoBehaviour
     /// </summary>
     public void CalculatePath()
     {
-        isMoving = false;
         targetTiles.Clear();
         //send raycast towards the enemy
         RaycastHit[] hits;
@@ -156,7 +176,6 @@ public class Ball : MonoBehaviour
     /// <returns></returns>
     private IEnumerator Move()
     {
-        isMoving = true;
         float timeElapsed = 0;
         startPos = new Vector3(currentTile.position.x, transform.position.y, currentTile.position.z);
         if (currentTileIndex< targetTiles.Count)
@@ -206,7 +225,20 @@ public class Ball : MonoBehaviour
         yield return new WaitForSeconds(1);
         muzzle.gameObject.SetActive(true);
         transform.LookAt(enemyBall.transform, Vector3.up);
-        //Spawn projectiles
+        yield return new WaitForSeconds(1);
+        //Spawn and fire projectiles - No time!!!
+        for (int i = 0; i < enemyBall.hp; i++)
+        {
+            GameObject bullet = Instantiate(bulletPrefab, muzzle.transform);
+            bullet.transform.localPosition = Vector3.zero;
+            pooledBullets.Add(bullet);
+        }
+        //this should be triggered by whoever is left standing, but I didn't have time to do the combat so I'm calling it from player one
+        if (playerOne)
+        {
+            //do the UI stuff.
+            UIManager.instance.EndBattle();
+        }
     }
 
     #endregion
@@ -217,12 +249,5 @@ public class Ball : MonoBehaviour
         currentState.StartState(this);
     }
 
-    private void Update()
-    {
-       if (isMoving)
-        {
-          //  ballBody.Rotate(Vector3.right * rollSpeed * Time.deltaTime, Space.Self);
-        }
-    }
 
 }
